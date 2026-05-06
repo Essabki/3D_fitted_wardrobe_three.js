@@ -549,13 +549,13 @@ loaderheel3.load(
 
 const loader_shirt = new GLTFLoader();
 
-loader_shirt.load('./texture/t-shirt_on_hanger (1).glb', (gltf) => {
+loader_shirt.load('https://raw.githubusercontent.com/Essabki/source/main/t-shirt_on_hanger%20(1).glb', (gltf) => {
     const shirt = gltf.scene;
     // Scale skin (adjust as needed)
     shirt.scale.set(0.005, 0.008, 0.005);
 
     // Put skin ON TOP of desk
-    shirt.position.set(0.9, 5.5, 3);
+    shirt.position.set(2, 5.5, 3);
    shirt.rotation.y = Math.PI /2; // turn sid
     wardrobe.add(shirt);
 });
@@ -564,13 +564,13 @@ loader_shirt.load('./texture/t-shirt_on_hanger (1).glb', (gltf) => {
 
 const loader_shirt_II = new GLTFLoader();
 
-loader_shirt_II.load('./texture/t-shirt_on_hanger.glb', (gltf) => {
+loader_shirt_II.load('https://raw.githubusercontent.com/Essabki/source/main/t-shirt_on_hanger.glb', (gltf) => {
     const shirt_II = gltf.scene;
     // Scale skin (adjust as needed)
     shirt_II.scale.set(0.005, 0.008, 0.005);
 
     // Put skin ON TOP of desk
-    shirt_II.position.set(2.5, 5.5, 3);
+    shirt_II.position.set(5.5, 5.5, 3);
    shirt_II.rotation.y = Math.PI /2; // turn sid
     wardrobe.add(shirt_II);
 });
@@ -579,13 +579,13 @@ loader_shirt_II.load('./texture/t-shirt_on_hanger.glb', (gltf) => {
 
 const loader_shirt_III = new GLTFLoader();
 
-loader_shirt_III.load('./texture/hangers_and_pants.glb', (gltf) => {
+loader_shirt_III.load('https://raw.githubusercontent.com/Essabki/source/main/hangers_and_pants.glb ', (gltf) => {
     const shirt_III = gltf.scene;
     // Scale skin (adjust as needed)
     shirt_III.scale.set(1, 1.2, 1);
 
     // Put skin ON TOP of desk
-    shirt_III.position.set(5, 6.3, 3);
+    shirt_III.position.set(8, 6.3, 3);
    shirt_III.rotation.y = Math.PI /2; // turn sid
     wardrobe.add(shirt_III);
 });
