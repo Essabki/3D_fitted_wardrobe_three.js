@@ -503,9 +503,9 @@ loaderbag.load(
 
  (gltf) => {
     const bag = gltf.scene;
-    bag.scale.set(8,11,8);
+    bag.scale.set(6,11,8);
 
-    bag.position.set(12.5, 0, 5);
+    bag.position.set(12.5, 0, 4.8);
    //heel2.rotation.y = Math.PI; // turn sid
     wardrobe.add(bag);
 });
@@ -539,7 +539,7 @@ loaderheel3.load(
     heel3.scale.set(10,15,10);
 
     // Put skin ON TOP of desk
-    heel3.position.set(-12.5, -10, 5);
+    heel3.position.set(-12.5, -10, 4.9);
    //heel2.rotation.y = Math.PI; // turn sid
     wardrobe.add(heel3);
 });
@@ -604,6 +604,7 @@ loader_coat.load('./texture/coat_hanger.glb', (gltf) => {
     wardrobe.add(coat);
 });
 
+
 // SHOE CABINET 
 //===============================================SHOE CABINET BACK
 
@@ -627,12 +628,12 @@ const shoe_cabinet_floorGeometry = new THREE.BoxGeometry(10, 8, 0.3);
 const shoe_cabinet_floor = new THREE.Mesh(shoe_cabinet_floorGeometry, roofMaterial);
 shoe_cabinet_floor.position.set(0, -20.37, 8.9);
 shoe_cabinet_floor.rotation.x = Math.PI / 2;
-shoe_cabinet_group.add(shoe_cabinet_floor);
+//shoe_cabinet_group.add(shoe_cabinet_floor);
 
 // TOP
-const shoe_cabinet_topGeometry = new THREE.BoxGeometry(10, 8, 0.3);
+const shoe_cabinet_topGeometry = new THREE.BoxGeometry(10.3, 8, 0.3);
 const shoe_cabinet_top = new THREE.Mesh(shoe_cabinet_topGeometry, roofMaterial);
-shoe_cabinet_top.position.set(0, 22.35, 8.9);
+shoe_cabinet_top.position.set(0, 22.35, 8.99);
 shoe_cabinet_top.rotation.x = Math.PI / 2;
 shoe_cabinet_group.add(shoe_cabinet_top);
 
@@ -665,9 +666,9 @@ shoe_cabinet_mid_dawn.rotation.x = Math.PI / 2;
 shoe_cabinet_group.add(shoe_cabinet_mid_dawn);
 
 // MID DOWN I
-const shoe_cabinet_mid_dawnIGeometry = new THREE.BoxGeometry(10, 8, 0.3);
+const shoe_cabinet_mid_dawnIGeometry = new THREE.BoxGeometry(10.3, 8, 0.3);
 const shoe_cabinet_mid_dawnI = new THREE.Mesh(shoe_cabinet_mid_dawnIGeometry, roofMaterial);
-shoe_cabinet_mid_dawnI.position.set(0, -17, 8.9);
+shoe_cabinet_mid_dawnI.position.set(0, -17, 8.99);
 shoe_cabinet_mid_dawnI.rotation.x = Math.PI / 2;
 shoe_cabinet_group.add(shoe_cabinet_mid_dawnI);
 
@@ -689,15 +690,52 @@ const shoe_cabinet_group_II = shoe_cabinet_group.clone();
 scene.add(shoe_cabinet_group_II);
 shoe_cabinet_group_II.position.set(30.79,-2,-10.7);
 
-// 📏 AXES
-// =========================
-//scene.add(new THREE.AxesHelper(4));
+
+
+
+//============================================== GLASS DOORS 
+//===============================LEFT GLASS DOOR
+const GlassGeometry = new THREE.BoxGeometry(9.69, 43, 0.1);
+const GlassMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.4
+});
+
+const Glass = new THREE.Mesh(GlassGeometry, GlassMaterial);
+Glass.position.set(-30.8, 1, 2.16);
+scene.add(Glass);
+
+//===============================RIGHT GLASS DOOR
+const Glass_IIGeometry = new THREE.BoxGeometry(9.69, 43, 0.1);
+
+const Glass_IIMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.4
+});
+
+const Glass_II = new THREE.Mesh(Glass_IIGeometry, Glass_IIMaterial);
+
+Glass_II.position.set(30.8, 1, 2.16);
+scene.add(Glass_II);
+
+
+//===============================DOORS SYSTEM
+// LEFT GLASS
+Glass.userData.side = "left";
+Glass.userData.isOpen = false;
+Glass.userData.closedX = Glass.position.x;
+Glass.userData.targetX = Glass.position.x;
+
+// RIGHT GLASS
+Glass_II.userData.side = "right";
+Glass_II.userData.isOpen = false;
+Glass_II.userData.closedX = Glass_II.position.x;
+Glass_II.userData.targetX = Glass_II.position.x;
+
 
 //===================================LOGIC
-// =========================
-// DOOR LOGIC INIT (FIXED)
-// =========================
-
 const doors = [
     head_left_door,
     head_right_door,
@@ -715,7 +753,8 @@ chest_right_door.userData.side = "right";
 
 foot_left_door.userData.side = "left";
 foot_right_door.userData.side = "right";
-
+doors.push(Glass);
+doors.push(Glass_II);
 
 // init state
 doors.forEach(door => {
@@ -789,25 +828,23 @@ window.addEventListener('click', (event) => {
         camera.position.set(0, 0, 90);
 
 
- ///////////////////////////////////////////////////////  Animation loop
+ //================================================= Animation loop
 function animate() {
     requestAnimationFrame(animate);
 
     controls.update();
 
     // =========================
-    // DOOR ANIMATION (MODE SAFE) - FIXED
+    // DOOR ANIMATION (SMOOTH + SAFE)
     // =========================
     doors.forEach(door => {
-        // ✅ FIXED: Check if target exists and is different
-        if (!door.userData.targetX || Math.abs(door.userData.targetX - door.position.x) < 0.001) {
-            return;
-        }
 
-        // smooth movement
-        door.position.x += (door.userData.targetX - door.position.x) * 0.1;
+        if (door.userData.targetX === undefined) return;
 
-        // snap when close (prevents jitter)
+        // smooth lerp movement
+        door.position.x += (door.userData.targetX - door.position.x) * 0.12;
+
+        // stop micro jitter
         if (Math.abs(door.userData.targetX - door.position.x) < 0.001) {
             door.position.x = door.userData.targetX;
         }
@@ -815,6 +852,7 @@ function animate() {
 
     renderer.render(scene, camera);
 }
+
 animate();
 
         // Handle window resize
